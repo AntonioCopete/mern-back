@@ -6,8 +6,7 @@ async function login(req, res, next) {
     const User = await db.User.findOne({ email: email }).select().lean().exec();
 
     res.status(200).send({
-      success: true,
-      data: email,
+      success: User,
     });
   } catch (err) {
     next(err);
@@ -15,19 +14,18 @@ async function login(req, res, next) {
 }
 
 async function createUser(req, res, next) {
-  const { email, password } = req.body;
+  const { email, password, fullName } = req.body;
 
   try {
     const user = await db.User.create({
+      fullName: fullName,
       email: email,
       password: password,
     });
 
     res.status(201).send({
       success: true,
-      data: {
-        _id: user._id,
-      },
+      data: user,
     });
   } catch (err) {
     next(err);
