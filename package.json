@@ -33,13 +33,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/assembler-school/node-develop-your-mvc-project.git"
+    "url": "https://github.com/AntonioCopete/mern-back"
   },
   "devDependencies": {
     "@babel/core": "^7.13.10",
     "@babel/eslint-parser": "^7.16.5",
     "@babel/preset-env": "^7.13.10",
     "@types/jest": "^26.0.20",
+    "babel": "^6.23.0",
     "eslint": "^7.21.0",
     "eslint-config-prettier": "^8.1.0",
     "eslint-plugin-babel": "^5.3.1",

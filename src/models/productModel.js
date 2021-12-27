@@ -14,6 +14,7 @@ const productSchema = new mongoose.Schema({
   },
   price: {
     type: Number,
+    minimum: 0,
     required: true,
     get: v => (v/100).toFixed(2),
     set: v => v*100

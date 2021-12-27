@@ -15,11 +15,11 @@ module.exports = {
     "prettier/prettier",
     "plugin:node/recommended",
   ],
-  parser: "@babel/eslint-parser",
+  parser: '@babel/eslint-parser',
   parserOptions: {
     ecmaVersion: 12,
     sourceType: "module",
-    requireConfigFile: "false",
+    requireConfigFile: false,
   },
   plugins: ["jest"],
   rules: {
