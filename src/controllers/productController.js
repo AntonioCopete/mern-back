@@ -1,13 +1,12 @@
 const db = require("../models");
-const {
-  logger
-} = require("../config/config");
+// const { logger } = require("../config/config");
 
 
 async function createProduct(req, res, next) {
 
   try {
     const {
+      images,
       title,
       description,
       price,
@@ -16,6 +15,7 @@ async function createProduct(req, res, next) {
     } = req.body;
 
     const newProduct = await db.Product.create({
+      images: images,
       title: title,
       description: description,
       price: price,
@@ -56,6 +56,7 @@ async function getSingleProduct(req, res, next) {
       })
       .select({
         title: 1,
+        images: 1,
         price: 1,
         description: 1,
         stock: 1
