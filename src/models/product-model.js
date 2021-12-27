@@ -2,10 +2,11 @@ const mongoose = require('mongoose')
 
 const productSchema = new mongoose.Schema(
   {
+    _id: String,
     title: {
       type: String,
       required: true,
-      trin: true,
+      trim: true,
     },
     image: {
       type: String,

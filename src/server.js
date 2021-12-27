@@ -25,4 +25,7 @@ app.use(
 app.use('/users', UserRouter)
 app.use('/', ProductRouter)
 
+// public folders
+app.use(express.static('uploads'))
+
 module.exports = app

@@ -29,13 +29,14 @@ async function getProducts(req, res, next) {
       data: products,
     })
   } catch (error) {
-    next(eror)
+    next(error)
   }
 }
 
 async function getSingleProduct(req, res, next) {
   try {
     const product = await db.Product.findById(req.params.productId)
+    res.type('application/json')
     res.status(200).send({ success: true, product })
   } catch (error) {
     next(error)
