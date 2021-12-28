@@ -18,7 +18,7 @@ app.use(
   cors({
     origin: CONFIG.development.client.URL,
   })
-)
+  )
 
 app.use('/users', UsersRouter)
 app.use('/products', ProductsRouter)
