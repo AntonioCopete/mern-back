@@ -1,13 +1,8 @@
-const {
-    ProductsRouter
-} = require('./products.routes');
+const ProductsRouter = require('./products.routes')
 
-
-const {
-    UsersRouter
-} = require('./users.routes');
+const UsersRouter = require('./users.routes')
 
 module.exports = {
-    ProductsRouter,
-    UsersRouter
+  ProductsRouter,
+  UsersRouter,
 }
