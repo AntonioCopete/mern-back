@@ -11,7 +11,7 @@ function errorMiddleware(err, req, res, next) {
 
       res.status(500).send({
           data: null,
-          error: "Something bad happened. Run before your PC explodes or our colleague Yaiser appears singing 'Feliz Navidad'"
+          message: "Something bad happened. Run before your PC explodes or our colleague Yaiser appears singing 'Feliz Navidad'"
       });
 }
 

@@ -83,11 +83,11 @@ async function deleteProduct(req, res, next) {
 
     if(updateItem.deletedCount === 1){
     res.status(200).send({
-      data: "Product successfully deleted",
+      message: "Product successfully deleted",
     });
   } else {
     res.status(500).send({
-      error: 'Product not removed',
+      message: 'Product not removed',
     });
   }
   } catch (err) {
