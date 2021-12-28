@@ -47,24 +47,51 @@ async function getProducts(req, res, next) {
 
 async function getSingleProduct(req, res, next) {
   try {
-    const ProductId = req.params['ProductId'];
-    // console.log(ProductId);
-    // const data = req.body;
+    const { productId: productId } = req.params;
 
-    const getProduct = await db.Product.findOne({
-        _id: ProductId,
-      })
-      .select({
-        title: 1,
-        images: 1,
-        price: 1,
-        description: 1,
-        stock: 1
-      })
-      .lean().exec();
+    const getProduct = await db.Product.findById({ _id: productId }).lean();
     res.status(200).send({
       data: getProduct
     });
+  } catch (err) {
+    console.log(err);
+    next(err);
+  }
+}
+
+
+async function updateProduct(req, res, next) {
+  try {
+    const { productId: productId } = req.params;
+
+    const updateItem = await db.Product.findByIdAndUpdate(productId, req.body, { 
+      new: true,
+    });
+    res.status(200).send({
+      data: updateItem
+    });
+  } catch (err) {
+    console.log(err);
+    next(err);
+  }
+}
+
+
+async function deleteProduct(req, res, next) {
+  try {
+    const productId = req.params['productId'];
+
+    const updateItem = await db.Product.deleteOne({ _id: productId });
+
+    if(updateItem.deletedCount === 1){
+    res.status(200).send({
+      data: "Product successfully deleted",
+    });
+  } else {
+    res.status(500).send({
+      error: 'Product not removed',
+    });
+  }
   } catch (err) {
     console.log(err);
     next(err);
@@ -75,4 +102,6 @@ module.exports = {
   createProduct: createProduct,
   getProducts: getProducts,
   getSingleProduct: getSingleProduct,
+  updateProduct: updateProduct,
+  deleteProduct: deleteProduct,
 };
