@@ -6,7 +6,8 @@ async function login(req, res, next) {
     const User = await db.User.findOne({ email: email }).select().lean().exec();
 
     res.status(200).send({
-      success: User,
+      success: true,
+      data: email,
     });
   } catch (err) {
     next(err);
