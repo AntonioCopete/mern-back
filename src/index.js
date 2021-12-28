@@ -1,21 +1,16 @@
-const app = require("./server");
-const config = require("./config/config");
-const connect = require("./db/connect");
+const app = require('./server')
+const config = require('./config/config')
+const connect = require('./db/connect')
 
-const { 
-  populateProducts
-} = require('./db/seed');
-
-
+const { populateProducts } = require('./db/products/productsSeed')
 
 connect().then(async function onServerInit() {
-  config.logger.info(`DB connected`);
+  config.logger.info(`DB connected`)
 
   // uncomment if you need to seed the database before
-  await populateProducts();
+  await populateProducts()
 
   app.listen(config.app.PORT, () => {
-  config.logger.info(`Server running at http://localhost:${config.app.PORT}`);
-  });
-});
-
+    config.logger.info(`Server running at http://localhost:${config.app.PORT}`)
+  })
+})
