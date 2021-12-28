@@ -16,16 +16,14 @@ app.use(morgan('dev'))
 app.use(helmet())
 app.use(json())
 
-// app.use('/users', UsersRouter)
-// app.use('/products', ProductsRouter)
-
-app.use('/users', UsersRouter)
-app.use('/products', ProductsRouter)
 
 app.use(
   cors({
     origin: config.client.URL,
   })
-)
+  )
 
+  app.use('/users', UsersRouter)
+  app.use('/products', ProductsRouter)
+  
 module.exports = app

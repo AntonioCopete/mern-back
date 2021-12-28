@@ -59,7 +59,6 @@ async function getSingleProduct(req, res, next) {
   }
 }
 
-
 async function updateProduct(req, res, next) {
   try {
     const { productId: productId } = req.params;
@@ -75,7 +74,6 @@ async function updateProduct(req, res, next) {
     next(err);
   }
 }
-
 
 async function deleteProduct(req, res, next) {
   try {
