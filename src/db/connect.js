@@ -1,8 +1,8 @@
 const mongoose = require("mongoose");
-const DB_URL = require("../config/config").db;
+const config = require("../config/config");
 
 function connect() {
-  return mongoose.connect("mongodb://localhost:27017/mern", {
+  return mongoose.connect(config.db.url, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
   });

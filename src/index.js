@@ -2,8 +2,15 @@ const app = require("./server");
 const config = require("./config/config");
 const connect = require("./db/connect");
 
-connect().then(console.log("Connected to DB"));
+const { populateProducts } = require('./db/products/productsSeed')
 
-app.listen(config.app.PORT, () => {
-  console.log(`Server listening on http:localhost:4000`);
-});
+connect().then(async function onServerInit() {
+  config.logger.info(`DB connected`)
+
+  // uncomment if you need to seed the database before
+  await populateProducts()
+
+  app.listen(config.app.PORT, () => {
+    config.logger.info(`Server running at http://localhost:${config.app.PORT}`)
+  })
+})
