@@ -5,7 +5,6 @@ const { CONFIG } = require('../../config/config');
 admin.initializeApp({
   credential: admin.credential.cert(CONFIG.development.firebase),
 });
-// console.log(CONFIG.development.firebase)
 
 const auth = admin.auth();
 

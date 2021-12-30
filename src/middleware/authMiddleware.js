@@ -1,16 +1,21 @@
-const { verifyIdToken } = require('../services/firebase/firebase')
+const { verifyIdToken } = require('../services/firebase/firebase');
 
 async function authMiddleware(req, res, next) {
-  const { authorization } = req.headers
-  const token = authorization.slice(7)
+  const { authorization } = req.headers;
+  const token = authorization.slice(7);
   try {
-    const verifiedToken = await verifyIdToken(token)
+    const verifiedToken = await verifyIdToken(token);
     if (verifiedToken) {
-      next()
+      const { uid, email } = verifiedToken;
+      req.user = {
+        uid: uid,
+        email: email,
+      };
+      next();
     }
   } catch (err) {
-    next(err)
+    next(err);
   }
 }
 
-module.exports = { authMiddleware }
+module.exports = { authMiddleware };
