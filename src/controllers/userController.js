@@ -19,11 +19,12 @@ async function login(req, res, next) {
 }
 
 async function createUser(req, res, next) {
-  const { email, password, fullName } = req.body;
+  console.log(req.body);
+  const { email, password } = req.body;
 
   try {
     const user = await db.User.create({
-      fullName: fullName,
+      fullName: email,
       email: email,
       password: password,
     });
