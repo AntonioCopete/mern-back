@@ -4,7 +4,8 @@ const fileUpload = require('express-fileupload')
 const helmet = require('helmet')
 const morgan = require('morgan')
 const cors = require('cors')
-const config = require('./config/config')
+const { CONFIG } = require('./config/config')
+const { authMiddleware } = require('./middleware/authMiddleware')
 
 const { ProductsRouter, UsersRouter } = require('./routes')
 
@@ -18,9 +19,9 @@ app.use(fileUpload({ createParentPath: true }))
 
 app.use(
   cors({
-    origin: config.client.URL,
+    origin: CONFIG.development.client.URL,
   })
-)
+  )
 
 app.use('/users', UsersRouter)
 app.use('/products', ProductsRouter)
