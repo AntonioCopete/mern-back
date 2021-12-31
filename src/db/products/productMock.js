@@ -67,7 +67,7 @@ function seedProducts() {
       stock: 800,
     },
     {
-      images: '',
+      images: 'bamboo-teaflask.jpeg',
       title: 'Tea flask - Bamboo handle',
       description:
         "Love a hot drink, like to take one on the commute, or when you're out and about - then this is a must have product for you. Our tea flask is great for any type of hot drinks, and keeps them hot (yes hot) not just warm for 4+hours. Removable tea lid included with infusion canister so loose tea can brew gently but not end up in your mouth whilst drinking! Food grade stainless steel inner, stylishly wrapped in bamboo with our new bamboo handle lid.",
@@ -154,7 +154,7 @@ function seedProducts() {
       stock: 5,
     },
     {
-      images: '',
+      images: 'luxury-pillow.jpg',
       title: 'Luxury Memory Foam Bamboo Pillow',
       description:
         'Our bamboo pillow cover is sumptuously soft and naturally breathable, encouraging airflow and coolness whilst you sleep on your memory foam pillow.',

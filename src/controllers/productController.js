@@ -3,7 +3,6 @@ const db = require('../models');
 
 async function createProduct(req, res, next) {
   const product = new db.Product(req.body);
-  console.log(product);
   try {
     const image = req.files.images;
     if (image) {
@@ -13,30 +12,9 @@ async function createProduct(req, res, next) {
       });
       product.images = image.name;
     }
-    // const {
-    //   images,
-    //   title,
-    //   description,
-    //   price,
-    //   stock
 
-    // } = req.body;
-
-    // const newProduct = await db.Product.create({
-    //   images: images,
-    //   title: title,
-    //   description: description,
-    //   price: price,
-    //   stock: stock
-    // });
     await product.save();
-    res.status(200).send({ success: true, data: product });
-    // res.status(201).send({
-    //   success: true,
-    //   data: {
-    //     newProduct
-    //   },
-    // });
+    res.status(200).send({ message: 'New product created correctly', product });
   } catch (err) {
     next(err);
   }
