@@ -72,32 +72,51 @@ async function getSingleProduct(req, res, next) {
 
 async function updateProduct(req, res, next) {
   try {
-    const product = req.params['productId'];
-    const image = req.files.image;
-    if(image){
-      delete('/src/uploads/' + image.name);  
-      const path = process.cwd() + '/src/uploads/' + image.name;
-      product.images = image.name;
-      image.mv(path, function (err) {
-        if (err) res.status(500).send(err);
-      });
-      console.log(product.images);
-      console.log(image.name);
+    let newProduct = req.body;
+
+    if (req.file) {
+      newProduct.images = req.file.filename;
+    } else {
+      let oldProduct = await db.Product.findById(req.params.productId);
+      newProduct.images = oldProduct.images;
     }
-    const updateItem = await db.Product.findByIdAndUpdate(
-      { _id: product },
-      req.body,
-      { new: true }
+
+    let product = await db.Product.findOneAndUpdate(
+      { _id: req.params.productId },
+      newProduct,
+      {
+        new: true,
+      }
     );
-    res.status(200).send({
-      message: 'Product successfully updated',
-      data: updateItem,
-    });
+
+    res.status(200).send({ data: product });
   } catch (err) {
     console.log(err);
     next(err);
   }
 }
+
+// const product = req.params['productId'];
+// const image = req.files.image;
+// if(image){
+//   delete('/src/uploads/' + image.name);  
+//   const path = process.cwd() + '/src/uploads/' + image.name;
+//   product.images = image.name;
+//   image.mv(path, function (err) {
+//     if (err) res.status(500).send(err);
+//   });
+//   console.log(product.images);
+//   console.log(image.name);
+// }
+// const updateItem = await db.Product.findByIdAndUpdate(
+//   { _id: product },
+//   req.body,
+//   { new: true }
+// );
+// res.status(200).send({
+//   message: 'Product successfully updated',
+//   data: updateItem,
+// });
 
 // const image = req.files.image;
 // if (image) {
@@ -110,33 +129,6 @@ async function updateProduct(req, res, next) {
 
 // await product.save();
 // res.status(200).send({ success: true, data: product });
-
-
-
-
-
-// async function updateProduct(req, res, next) {
-//   try {
-//     const { productId: productId } = req.params;
-//     const updateImage = await db.Product.findByIdAndUpdate(productId, req.body, {
-//         new: true,
-//       });
-
-
-//       if (err) res.status(500).send(err);
-//     });
-//     product.images = image.name;
-//     }
-//     await product.save();
-//     res.status(200).send({ success: true, data: product });
-    // const { productId: productId } = req.params;
-
-    // const updateItem = await db.Product.findByIdAndUpdate(productId, req.body, {
-    //   new: true,
-    // });
-    // res.status(200).send({
-    //   data: updateItem,
-    // });
 
 async function deleteProduct(req, res, next) {
   try {
