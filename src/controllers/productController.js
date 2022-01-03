@@ -70,20 +70,6 @@ async function updateProduct(req, res, next) {
     console.log(err);
     next(err);
   }
-
-  //   const { productId: productId } = req.params;
-
-  //   const updateItem = await db.Product.findByIdAndUpdate(productId, req.body, {
-  //     new: true,
-  //   });
-
-  //   res.status(200).send({
-  //     data: updateItem,
-  //   });
-  // } catch (err) {
-  //   console.log(err);
-  //   next(err);
-  // }
 }
 
 async function deleteProduct(req, res, next) {
