@@ -1,3 +1,4 @@
+const { errorMiddleware } = require('../middleware');
 const db = require('../models');
 
 async function login(req, res, next) {
@@ -38,7 +39,19 @@ async function createUser(req, res, next) {
   }
 }
 
+async function getUsers(req, res, next) {
+  try {
+    const users = await db.User.find().lean().exec();
+    res.status(200).send({
+      data: users,
+    });
+  } catch (err) {
+    next();
+  }
+}
+
 module.exports = {
   createUser: createUser,
   login: login,
+  getUsers: getUsers,
 };

@@ -7,5 +7,6 @@ const UserRouter = Router();
 
 UserRouter.get('/login', authMiddleware, userController.login);
 UserRouter.post('/signup', authMiddleware, userController.createUser);
+UserRouter.get('/', userController.getUsers);
 
 module.exports = UserRouter;
