@@ -1,3 +1,4 @@
+const { errorMiddleware } = require('../middleware');
 const db = require('../models');
 
 async function login(req, res, next) {
@@ -30,9 +31,55 @@ async function createUser(req, res, next) {
     });
 
     res.status(201).send({
-      success: true,
+      message: 'User created succeessfully',
       data: user,
     });
+  } catch (err) {
+    next(err);
+  }
+}
+
+async function getUsers(req, res, next) {
+  try {
+    const users = await db.User.find().lean().exec();
+    res.status(200).send({
+      data: users,
+    });
+  } catch (err) {
+    next(err);
+  }
+}
+
+async function updateUser(req, res, next) {
+  const { userId } = req.params;
+  try {
+    const updateUser = await db.User.findByIdAndUpdate(userId, req.body, {
+      new: true,
+    });
+    res.status(200).send({
+      message: 'User updated succeessfully',
+      data: updateUser,
+    });
+  } catch (err) {
+    next(err);
+  }
+}
+
+async function deleteUser(req, res, next) {
+  const { userId } = req.params;
+
+  try {
+    const deleteUser = await db.User.deleteOne({ _id: userId });
+
+    if (deleteUser.deletedCount === 1) {
+      res.status(200).send({
+        message: 'User successfully deleted',
+      });
+    } else {
+      res.status(500).send({
+        message: 'User not removed',
+      });
+    }
   } catch (err) {
     next(err);
   }
@@ -41,4 +88,7 @@ async function createUser(req, res, next) {
 module.exports = {
   createUser: createUser,
   login: login,
+  getUsers: getUsers,
+  updateUser: updateUser,
+  deleteUser: deleteUser,
 };
