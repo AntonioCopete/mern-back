@@ -31,7 +31,7 @@ async function createUser(req, res, next) {
     });
 
     res.status(201).send({
-      success: true,
+      message: 'User created succeessfully',
       data: user,
     });
   } catch (err) {
@@ -57,6 +57,7 @@ async function updateUser(req, res, next) {
       new: true,
     });
     res.status(200).send({
+      message: 'User updated succeessfully',
       data: updateUser,
     });
   } catch (err) {
