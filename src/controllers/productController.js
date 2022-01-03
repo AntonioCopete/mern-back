@@ -3,7 +3,6 @@ const db = require('../models');
 
 async function createProduct(req, res, next) {
   const product = new db.Product(req.body);
-  console.log(product);
   try {
     const image = req.files.images;
     if (image) {
@@ -13,30 +12,9 @@ async function createProduct(req, res, next) {
       });
       product.images = image.name;
     }
-    // const {
-    //   images,
-    //   title,
-    //   description,
-    //   price,
-    //   stock
 
-    // } = req.body;
-
-    // const newProduct = await db.Product.create({
-    //   images: images,
-    //   title: title,
-    //   description: description,
-    //   price: price,
-    //   stock: stock
-    // });
     await product.save();
-    res.status(200).send({ success: true, data: product });
-    // res.status(201).send({
-    //   success: true,
-    //   data: {
-    //     newProduct
-    //   },
-    // });
+    res.status(200).send({ message: 'New product created correctly', product });
   } catch (err) {
     next(err);
   }
@@ -70,15 +48,25 @@ async function getSingleProduct(req, res, next) {
 
 async function updateProduct(req, res, next) {
   try {
-    const { productId: productId } = req.params;
+    let newProduct = req.body;
 
-    const updateItem = await db.Product.findByIdAndUpdate(productId, req.body, {
-      new: true,
-    });
-    res.status(200).send({
-      data: updateItem,
-    });
-  } catch (err) {
+    if (req.file) {
+      newProduct.images = req.file.filename;
+    } else {
+      let oldProduct = await db.Product.findById(req.params.productId);
+      newProduct.images = oldProduct.images;
+    }
+
+    let product = await db.Product.findOneAndUpdate(
+      { _id: req.params.productId },
+      newProduct,
+      {
+        new: true,
+      }
+    );
+
+    res.status(200).send({ data: product });
+  } catch (error) {
     console.log(err);
     next(err);
   }
