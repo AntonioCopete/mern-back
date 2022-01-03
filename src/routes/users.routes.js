@@ -8,5 +8,8 @@ const UserRouter = Router();
 UserRouter.get('/login', authMiddleware, userController.login);
 UserRouter.post('/signup', authMiddleware, userController.createUser);
 UserRouter.get('/', userController.getUsers);
+UserRouter.post('/', userController.createUser);
+UserRouter.patch('/:userId', userController.updateUser);
+UserRouter.delete('/:userId', userController.deleteUser);
 
 module.exports = UserRouter;

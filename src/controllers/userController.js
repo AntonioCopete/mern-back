@@ -46,7 +46,41 @@ async function getUsers(req, res, next) {
       data: users,
     });
   } catch (err) {
-    next();
+    next(err);
+  }
+}
+
+async function updateUser(req, res, next) {
+  const { userId } = req.params;
+  try {
+    const updateUser = await db.User.findByIdAndUpdate(userId, req.body, {
+      new: true,
+    });
+    res.status(200).send({
+      data: updateUser,
+    });
+  } catch (err) {
+    next(err);
+  }
+}
+
+async function deleteUser(req, res, next) {
+  const { userId } = req.params;
+
+  try {
+    const deleteUser = await db.User.deleteOne({ _id: userId });
+
+    if (deleteUser.deletedCount === 1) {
+      res.status(200).send({
+        message: 'User successfully deleted',
+      });
+    } else {
+      res.status(500).send({
+        message: 'User not removed',
+      });
+    }
+  } catch (err) {
+    next(err);
   }
 }
 
@@ -54,4 +88,6 @@ module.exports = {
   createUser: createUser,
   login: login,
   getUsers: getUsers,
+  updateUser: updateUser,
+  deleteUser: deleteUser,
 };
