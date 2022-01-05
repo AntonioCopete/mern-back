@@ -86,48 +86,63 @@ async function updateProduct(req, res, next) {
     try {
       const id = req.params['productId'];
       const editedProduct = req.body;
-      const images = req.files.images;
-      // if (images) {
-      // const path = process.cwd() + '/src/uploads/' + images.name;
-      // console.log(path);
-      // for(let i = 0; i < images.length; i++) {
-      //   images.mv(path, function (err) {
-      //         if (err) res.status(500).send(err);
-      //       });
-      //       editedProduct.images = images.name;
-      //       console.log(editedProduct.images);
-      //     }
-      // }
-      if (images) {
-        const path = process.cwd() + '/src/uploads/' + images.name;
-        images.mv(path, function (err) {
+      const images = [];
+      req.files.images.forEach((image) => {
+        const path = process.cwd() + '/src/uploads/' + image.name;
+        image.mv(path, function (err) {
           if (err) res.status(500).send(err);
         });
-        editedProduct.images = images.name;
-      }
-      console.log("Received edited product --> ", editedProduct);
-      const updatedProduct = await db.Product.findByIdAndUpdate(
-        id,
-        {
-          images: editedProduct.images,
-          title: editedProduct.title,
-          description: editedProduct.description,
-          price: editedProduct.price,
-          stock: editedProduct.stock,
-        },
-        {
-          new: true,
-        },
-      );
-      res.status(200).send({
-        message: "Successfully updated",
-        updatedProduct: updatedProduct,
+        images.push({
+          name: image.name,
+        });
+        editedProduct.images = image.name;
       });
-    } catch (error) {
-      res.status(500).send({ error: error.message });
-      next(error);
+      const updateItem = await db.Product.findByIdAndUpdate(id, editedProduct);
+      // const updatedProduct = await db.Product.findByIdAndUpdate(
+      //   id,
+      //   {
+      //     images: editedProduct.images,
+      //     title: editedProduct.title,
+      //     description: editedProduct.description,
+      //     price: editedProduct.price,
+      //     stock: editedProduct.stock,
+      //   },
+      //   {
+      //     new: true,
+      //   },
+      // );
+      res.status(200).send({
+        message: 'Product successfully updated',
+        data: updateItem
+      });
+    } catch (err) {
+      console.log(err);
+      next(err);
     }
   }
+  //     console.log("Received edited product --> ", editedProduct);
+  //     const updatedProduct = await db.Product.findByIdAndUpdate(
+  //       id,
+  //       {
+  //         images: editedProduct.images,
+  //         title: editedProduct.title,
+  //         description: editedProduct.description,
+  //         price: editedProduct.price,
+  //         stock: editedProduct.stock,
+  //       },
+  //       {
+  //         new: true,
+  //       },
+  //     );
+  //     res.status(200).send({
+  //       message: "Successfully updated",
+  //       updatedProduct: updatedProduct,
+  //     });
+  //   } catch (error) {
+  //     res.status(500).send({ error: error.message });
+  //     next(error);
+  //   }
+  // }
 
 
 

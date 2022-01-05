@@ -1,4 +1,4 @@
-const { seedProducts } = require('./productMock');
+const { seedProducts } = require('./productsSeedData');
 const db = require('../../models');
 
 async function populateProducts() {
