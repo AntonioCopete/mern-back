@@ -3,41 +3,40 @@ const db = require('../models');
 // const { logger } = require("../config/config");
 
 async function createProduct(req, res, next) {
-  const product = new db.Product(req.body);
   try {
-    const images = req.files.images;
-    if (images) {
-      const path = process.cwd() + '/src/uploads/' + images.name;
-      images.mv(path, function (err) {
-        if (err) res.status(500).send(err);
+    const editedProduct = req.body;
+    if(!req.files) {
+      res.send({
+        status: false,
+        message: 'No image uploaded'
       });
-      product.images = images.name;
+    } else {
+      var data = [];
+      // loop all images
+      req.files.images.forEach((image) => {
+        const path = process.cwd() + '/src/uploads/' + image.name;
+        image.mv(path);
+        // push image details
+        data.push(
+          image.name
+        );
+      });
     }
-    // const {
-    //   images,
-    //   title,
-    //   description,
-    //   price,
-    //   stock
-
-    // } = req.body;
-
-    // const newProduct = await db.Product.create({
-    //   images: images,
-    //   title: title,
-    //   description: description,
-    //   price: price,
-    //   stock: stock
-    // });
-    await product.save();
-    res.status(200).send({ success: true, data: product });
-    // res.status(201).send({
-    //   success: true,
-    //   data: {
-    //     newProduct
-    //   },
-    // });
+    const newProduct = await db.Product.create(
+      {
+        images: data,
+        title: editedProduct.title,
+        description: editedProduct.description,
+        price: editedProduct.price,
+        stock: editedProduct.stock,
+      },
+    );
+    res.status(200).send({
+      message: 'Product successfully created',
+      data: newProduct
+    });
   } catch (err) {
+    console.log(err);
     next(err);
   }
 }
@@ -68,116 +67,59 @@ async function getSingleProduct(req, res, next) {
   }
 }
 
-// update product and if image exists delete it from database
-
-
-// try {
-//   const images = req.files.images;
-//   if (images) {
-//     const path = process.cwd() + '/src/uploads/' + images.name;
-//     images.mv(path, function (err) {
-//       if (err) res.status(500).send(err);
-//     });
-//     product.images = images.name;
-//   }
-
-
 async function updateProduct(req, res, next) {
     try {
       const id = req.params['productId'];
       const editedProduct = req.body;
-      const images = [];
-      req.files.images.forEach((image) => {
-        const path = process.cwd() + '/src/uploads/' + image.name;
-        image.mv(path, function (err) {
-          if (err) res.status(500).send(err);
+      if(!req.files) {
+        res.send({
+          status: false,
+          message: 'No image uploaded'
         });
-        images.push({
-          name: image.name,
+      } else {
+        var data = [];
+        // loop all images
+        req.files.images.forEach((image) => {
+          const path = process.cwd() + '/src/uploads/' + image.name;
+          image.mv(path);
+          // push image details
+          data.push(
+            image.name
+          );
         });
-        editedProduct.images = image.name;
-      });
-      const updateItem = await db.Product.findByIdAndUpdate(id, editedProduct);
-      // const updatedProduct = await db.Product.findByIdAndUpdate(
-      //   id,
-      //   {
-      //     images: editedProduct.images,
-      //     title: editedProduct.title,
-      //     description: editedProduct.description,
-      //     price: editedProduct.price,
-      //     stock: editedProduct.stock,
-      //   },
-      //   {
-      //     new: true,
-      //   },
-      // );
+      }
+      const updatedProduct = await db.Product.findByIdAndUpdate(
+        id,
+        {
+          images: data,
+          title: editedProduct.title,
+          description: editedProduct.description,
+          price: editedProduct.price,
+          stock: editedProduct.stock,
+        },
+        {
+          new: true,
+        },
+      );
       res.status(200).send({
         message: 'Product successfully updated',
-        data: updateItem
+        data: updatedProduct
       });
     } catch (err) {
       console.log(err);
       next(err);
     }
   }
-  //     console.log("Received edited product --> ", editedProduct);
-  //     const updatedProduct = await db.Product.findByIdAndUpdate(
-  //       id,
-  //       {
-  //         images: editedProduct.images,
-  //         title: editedProduct.title,
-  //         description: editedProduct.description,
-  //         price: editedProduct.price,
-  //         stock: editedProduct.stock,
-  //       },
-  //       {
-  //         new: true,
-  //       },
-  //     );
-  //     res.status(200).send({
-  //       message: "Successfully updated",
-  //       updatedProduct: updatedProduct,
-  //     });
-  //   } catch (error) {
-  //     res.status(500).send({ error: error.message });
-  //     next(error);
-  //   }
-  // }
 
-
-
-
-// async function updateProduct(req, res, next) {
-//   try {
-//     let newProduct = req.body;
-
-//     if (req.file) {
-//       newProduct.images = req.file.filename;
-//     } else {
-//       let oldProduct = await db.Product.findById(req.params.productId);
-//       newProduct.images = oldProduct.images;
-//     }
-
-//     let product = await db.Product.findOneAndUpdate(
-//       { _id: req.params.productId },
-//       newProduct,
-//       {
-//         new: true,
-//       }
-//     );
-
-//     res.status(200).send({ data: product });
-//   } catch (err) {
-//     console.log(err);
-//     next(err);
-//   }
-// }
 
 async function deleteProduct(req, res, next) {
   try {
     const productId = req.params['productId'];
 
-    const updateItem = await db.Product.deleteOne({ _id: productId });
+    const updateItem = await db.Product.deleteOne(
+      { _id: productId },
+      { w: "majority", wtimeout: 100 },
+      );
 
     if (updateItem.deletedCount === 1) {
       res.status(200).send({
@@ -193,16 +135,6 @@ async function deleteProduct(req, res, next) {
     next(err);
   }
 }
-
-// try {
-//   const image = req.files.image;
-//   if (image) {
-//     const path = process.cwd() + '/src/uploads/' + image.name;
-//     image.mv(path, function (err) {
-//       if (err) res.status(500).send(err);
-//     });
-//     product.images = image.name;
-//   }
 
 
 module.exports = {
