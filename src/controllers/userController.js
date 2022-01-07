@@ -89,7 +89,7 @@ async function getSingleUser(req, res, next) {
   try {
     const { userId } = req.params;
 
-    const user = await db.User.findById({ _id: userId }).lean();
+    const user = await db.User.findById({ _id: userId }).lean().exec();
     res.status(200).send({
       data: user,
     });
