@@ -41,7 +41,6 @@ async function getSingleProduct(req, res, next) {
       data: getProduct,
     });
   } catch (err) {
-    console.log(err);
     next(err);
   }
 }
