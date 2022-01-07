@@ -66,7 +66,7 @@ async function updateProduct(req, res, next) {
     );
 
     res.status(200).send({ data: product });
-  } catch (error) {
+  } catch (err) {
     console.log(err);
     next(err);
   }
