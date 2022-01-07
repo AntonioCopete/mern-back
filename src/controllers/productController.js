@@ -5,26 +5,37 @@ const db = require('../models');
 async function createProduct(req, res, next) {
   try {
     const editedProduct = req.body;
-    if(!req.files) {
-      res.send({
-        status: false,
-        message: 'No image uploaded'
-      });
-    } else {
+    const mainImage = req.files.mainImage;
+    const gallery = req.files.gallery;
+
+      if(req.files) {
+      // Send main image to its field
+      const path = process.cwd() + '/src/uploads/' + mainImage.name;
+      mainImage.mv(path);
+      editedProduct.mainImage = mainImage.name;
+
+      // push gallery to its array of images
       var data = [];
       // loop all images
-      req.files.images.forEach((image) => {
+      gallery.forEach((image) => {
         const path = process.cwd() + '/src/uploads/' + image.name;
         image.mv(path);
         // push image details
         data.push(
-          image.name
-        );
+          image.name,
+        )
       });
-    }
+    } else if (!req.files.mainImage) {
+      res.send({
+        status: false,
+        message: 'At least one main Image is required'
+      });
+    };
+
     const newProduct = await db.Product.create(
       {
-        images: data,
+        mainImage: editedProduct.mainImage,
+        gallery: data,
         title: editedProduct.title,
         description: editedProduct.description,
         price: editedProduct.price,
