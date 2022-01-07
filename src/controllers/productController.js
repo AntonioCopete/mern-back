@@ -1,21 +1,49 @@
+const { log } = require('loglevel');
 const db = require('../models');
 // const { logger } = require("../config/config");
 
 async function createProduct(req, res, next) {
-  const product = new db.Product(req.body);
   try {
-    const image = req.files.images;
-    if (image) {
-      const path = process.cwd() + '/src/uploads/' + image.name;
-      image.mv(path, function (err) {
-        if (err) res.status(500).send(err);
+    const editedProduct = req.body;
+    const mainImage = req.files.mainImage;
+    const gallery = req.files.gallery;
+
+    if (req.files) {
+      // Send main image to its field
+      const path = process.cwd() + '/src/uploads/' + mainImage.name;
+      mainImage.mv(path);
+      editedProduct.mainImage = mainImage.name;
+
+      // push gallery to its array of images
+      var data = [];
+      // loop all images
+      gallery.forEach((image) => {
+        const path = process.cwd() + '/src/uploads/' + image.name;
+        image.mv(path);
+        // push image details
+        data.push(image.name);
       });
-      product.images = image.name;
+    } else if (!req.files.mainImage) {
+      res.send({
+        status: false,
+        message: 'At least one main Image is required',
+      });
     }
 
-    await product.save();
-    res.status(200).send({ message: 'New product created correctly', product });
+    const newProduct = await db.Product.create({
+      mainImage: editedProduct.mainImage,
+      gallery: data,
+      title: editedProduct.title,
+      description: editedProduct.description,
+      price: editedProduct.price,
+      stock: editedProduct.stock,
+    });
+    res.status(200).send({
+      message: 'Product successfully created',
+      data: newProduct,
+    });
   } catch (err) {
+    console.log(err);
     next(err);
   }
 }
@@ -47,24 +75,40 @@ async function getSingleProduct(req, res, next) {
 
 async function updateProduct(req, res, next) {
   try {
-    let newProduct = req.body;
-
-    if (req.file) {
-      newProduct.images = req.file.filename;
+    const id = req.params['productId'];
+    const editedProduct = req.body;
+    if (!req.files) {
+      res.send({
+        status: false,
+        message: 'No image uploaded',
+      });
     } else {
-      let oldProduct = await db.Product.findById(req.params.productId);
-      newProduct.images = oldProduct.images;
+      var data = [];
+      // loop all images
+      req.files.images.forEach((image) => {
+        const path = process.cwd() + '/src/uploads/' + image.name;
+        image.mv(path);
+        // push image details
+        data.push(image.name);
+      });
     }
-
-    let product = await db.Product.findOneAndUpdate(
-      { _id: req.params.productId },
-      newProduct,
+    const updatedProduct = await db.Product.findByIdAndUpdate(
+      id,
+      {
+        images: data,
+        title: editedProduct.title,
+        description: editedProduct.description,
+        price: editedProduct.price,
+        stock: editedProduct.stock,
+      },
       {
         new: true,
       }
     );
-
-    res.status(200).send({ data: product });
+    res.status(200).send({
+      message: 'Product successfully updated',
+      data: updatedProduct,
+    });
   } catch (err) {
     console.log(err);
     next(err);
@@ -75,7 +119,10 @@ async function deleteProduct(req, res, next) {
   try {
     const productId = req.params['productId'];
 
-    const updateItem = await db.Product.deleteOne({ _id: productId });
+    const updateItem = await db.Product.deleteOne(
+      { _id: productId },
+      { w: 'majority', wtimeout: 100 }
+    );
 
     if (updateItem.deletedCount === 1) {
       res.status(200).send({
