@@ -21,11 +21,11 @@ async function login(req, res, next) {
 
 async function createUser(req, res, next) {
   console.log(req.body);
-  const { email, password, fullName } = req.body;
+  const { email, password, fullname } = req.body;
 
   try {
     const user = await db.User.create({
-      fullName: fullName,
+      fullname: fullname,
       email: email,
       password: password,
     });
