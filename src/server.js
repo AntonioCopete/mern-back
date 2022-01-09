@@ -13,7 +13,14 @@ app.use(morgan('dev'));
 app.use(helmet());
 app.use(json());
 app.use(urlencoded({ extended: true }));
-app.use(fileUpload({ createParentPath: true }));
+app.use(
+  fileUpload({
+    createParentPath: true,
+    useTempFiles: true,
+    tempFileDir: './tmp',
+    limits: { fileSize: 1024 * 1024 * 2 }, // 2MB
+  })
+);
 
 app.use(
   cors({
