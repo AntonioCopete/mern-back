@@ -10,14 +10,13 @@ async function createProduct(req, res, next) {
     const data = [];
 
 
-// Option 1 -- either 1 or several images
     if (mainImage == null) {
     res.send({
       status: false,
       message: 'At least one main Image is required',
     });
   }
-    else if(mainImage !== null && gallery[0] == true) {
+    else if(mainImage !== null && gallery == null) {
     // Send main image to its field
     const path = process.cwd() + '/src/uploads/' + mainImage.name;
     mainImage.mv(path);
@@ -118,30 +117,61 @@ async function updateProduct(req, res, next) {
   const editedProduct = req.body;
   const mainImage = req.files.mainImage;
   const gallery = req.files.gallery;
+  const data = [];
 
-    if(req.files) {
+  if (mainImage == null) {
+    res.send({
+      status: false,
+      message: 'At least one main Image is required',
+    });
+  }
+    else if(mainImage !== null && gallery == null) {
     // Send main image to its field
     const path = process.cwd() + '/src/uploads/' + mainImage.name;
     mainImage.mv(path);
     editedProduct.mainImage = mainImage.name;
 
-    // push gallery to its array of images
-    var data = [];
-    // loop all images
-    gallery.forEach((image) => {
-      const path = process.cwd() + '/src/uploads/' + image.name;
-      image.mv(path);
-      // push image details
-      data.push(
-        image.name,
+  } else if(mainImage !== null && gallery.length > 1 ) {
+      // Send main image to its field
+      const path = process.cwd() + '/src/uploads/' + mainImage.name;
+      mainImage.mv(path);
+      editedProduct.mainImage = mainImage.name;
+
+      // For multiple images
+      gallery.forEach((image) => {
+        const savePath = process.cwd() + '/src/uploads/' + image.name;
+        image.mv(savePath, function (err) {
+          if(err) {
+            console.log(err),
+            'Remember to at least provide two images at the gallery'
+        }else{
+          console.log('File uploaded successfully');
+        }
+        });
+        data.push(
+          image.name,
       )
     });
-  } else if (!req.files.mainImage) {
-    res.send({
-      status: false,
-      message: 'At least one main Image is required'
-    });
-  };
+
+  } else if(mainImage !== null && gallery !== null) {
+    // Send main image to its field
+      const path = process.cwd() + '/src/uploads/' + mainImage.name;
+      mainImage.mv(path);
+      editedProduct.mainImage = mainImage.name;
+
+        // For a single image
+
+        const galleryPath = process.cwd() + '/src/uploads/' + gallery.name;
+          gallery.mv(galleryPath);
+          data.push(
+            gallery.name,
+            );
+    } else {
+      res.send({
+        status: false,
+        message: 'Remember to at least provide two images at the gallery',
+      });  
+    }
     const updatedProduct = await db.Product.findByIdAndUpdate(
       id,
       {
