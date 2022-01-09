@@ -9,8 +9,8 @@ const productSchema = new mongoose.Schema(
       minimum: 0,
     },
     gallery: [{
-      // data: Buffer,
-      // required: false,
+      data: Buffer,
+      required: false,
       type: [String],
     }],
     title: {

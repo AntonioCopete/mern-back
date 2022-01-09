@@ -7,30 +7,64 @@ async function createProduct(req, res, next) {
     const editedProduct = req.body;
     const mainImage = req.files.mainImage;
     const gallery = req.files.gallery;
+    const data = [];
 
-      if(req.files) {
+
+// Option 1 -- either 1 or several images
+    if (mainImage == null) {
+    res.send({
+      status: false,
+      message: 'At least one main Image is required',
+    });
+  }
+    else if(mainImage !== null && gallery[0] == true) {
+    // Send main image to its field
+    const path = process.cwd() + '/src/uploads/' + mainImage.name;
+    mainImage.mv(path);
+    editedProduct.mainImage = mainImage.name;
+
+  } else if(mainImage !== null && gallery.length > 1 ) {
       // Send main image to its field
       const path = process.cwd() + '/src/uploads/' + mainImage.name;
       mainImage.mv(path);
       editedProduct.mainImage = mainImage.name;
 
-      // push gallery to its array of images
-      var data = [];
-      // loop all images
+      // For multiple images
       gallery.forEach((image) => {
-        const path = process.cwd() + '/src/uploads/' + image.name;
-        image.mv(path);
-        // push image details
+        const savePath = process.cwd() + '/src/uploads/' + image.name;
+        image.mv(savePath, function (err) {
+          if(err) {
+            console.log(err),
+            'Remember to at least provide two images at the gallery'
+        }else{
+          console.log('File uploaded successfully');
+        }
+        });
         data.push(
           image.name,
-        )
-      });
-    } else if (!req.files.mainImage) {
+      )
+    });
+
+  } else if(mainImage !== null && gallery !== null) {
+    // Send main image to its field
+      const path = process.cwd() + '/src/uploads/' + mainImage.name;
+      mainImage.mv(path);
+      editedProduct.mainImage = mainImage.name;
+
+        // For a single image
+
+        const galleryPath = process.cwd() + '/src/uploads/' + gallery.name;
+          gallery.mv(galleryPath);
+          data.push(
+            gallery.name,
+            );
+    } else {
       res.send({
         status: false,
-        message: 'At least one main Image is required'
-      });
-    };
+        message: 'Remember to at least provide two images at the gallery',
+      });  
+    }
+    
 
     const newProduct = await db.Product.create(
       {
@@ -79,43 +113,53 @@ async function getSingleProduct(req, res, next) {
 }
 
 async function updateProduct(req, res, next) {
-    try {
-      const id = req.params['productId'];
-      const editedProduct = req.body;
-      if(!req.files) {
-        res.send({
-          status: false,
-          message: 'No image uploaded'
-        });
-      } else {
-        var data = [];
-        // loop all images
-        req.files.images.forEach((image) => {
-          const path = process.cwd() + '/src/uploads/' + image.name;
-          image.mv(path);
-          // push image details
-          data.push(
-            image.name
-          );
-        });
-      }
-      const updatedProduct = await db.Product.findByIdAndUpdate(
-        id,
-        {
-          images: data,
-          title: editedProduct.title,
-          description: editedProduct.description,
-          price: editedProduct.price,
-          stock: editedProduct.stock,
-        },
-        {
-          new: true,
-        },
-      );
-      res.status(200).send({
-        message: 'Product successfully updated',
-        data: updatedProduct
-      });
+  try {
+  const id = req.params['productId'];
+  const editedProduct = req.body;
+  const mainImage = req.files.mainImage;
+  const gallery = req.files.gallery;
+
+    if(req.files) {
+    // Send main image to its field
+    const path = process.cwd() + '/src/uploads/' + mainImage.name;
+    mainImage.mv(path);
+    editedProduct.mainImage = mainImage.name;
+
+    // push gallery to its array of images
+    var data = [];
+    // loop all images
+    gallery.forEach((image) => {
+      const path = process.cwd() + '/src/uploads/' + image.name;
+      image.mv(path);
+      // push image details
+      data.push(
+        image.name,
+      )
+    });
+  } else if (!req.files.mainImage) {
+    res.send({
+      status: false,
+      message: 'At least one main Image is required'
+    });
+  };
+    const updatedProduct = await db.Product.findByIdAndUpdate(
+      id,
+      {
+        mainImage: editedProduct.mainImage,
+        gallery: data,
+        title: editedProduct.title,
+        description: editedProduct.description,
+        price: editedProduct.price,
+        stock: editedProduct.stock,
+      },
+      {
+        new: true,
+      },
+    );
+    res.status(200).send({
+      message: 'Product successfully updated',
+      data: updatedProduct
+    });
     } catch (err) {
       console.log(err);
       next(err);
