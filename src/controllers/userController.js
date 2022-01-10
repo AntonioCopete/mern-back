@@ -21,11 +21,11 @@ async function login(req, res, next) {
 
 async function createUser(req, res, next) {
   console.log(req.body);
-  const { email, password, fullname } = req.body;
+  const { email, password, fullName } = req.body;
 
   try {
     const user = await db.User.create({
-      fullName: fullname,
+      fullName: fullName,
       email: email,
       password: password,
     });
@@ -85,10 +85,24 @@ async function deleteUser(req, res, next) {
   }
 }
 
+async function getSingleUser(req, res, next) {
+  try {
+    const { userId } = req.params;
+
+    const user = await db.User.findById({ _id: userId }).lean().exec();
+    res.status(200).send({
+      data: user,
+    });
+  } catch (err) {
+    next(err);
+  }
+}
+
 module.exports = {
   createUser: createUser,
   login: login,
   getUsers: getUsers,
   updateUser: updateUser,
   deleteUser: deleteUser,
+  getSingleUser: getSingleUser,
 };
