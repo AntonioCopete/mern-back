@@ -9,7 +9,7 @@ const productSchema = new mongoose.Schema(
       minimum: 0,
     },
     gallery: [{
-      data: Buffer,
+      data: [Buffer],
       required: false,
       type: [String],
     }],
