@@ -1,4 +1,4 @@
-const { log } = require('loglevel');
+// const { log } = require('loglevel');
 const db = require('../models');
 // const { logger } = require("../config/config");
 
@@ -223,7 +223,6 @@ async function updateProduct(req, res, next) {
         new: true,
       },
     );
-<<<<<<< HEAD
     res.status(200).send({
       message: 'Product successfully updated',
       data: updatedProduct
@@ -232,13 +231,6 @@ async function updateProduct(req, res, next) {
       console.log(err);
       next(err);
     }
-=======
-
-    res.status(200).send({ data: product });
-  } catch (err) {
-    console.log(err);
-    next(err);
->>>>>>> main
   }
 
 
