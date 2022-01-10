@@ -1,39 +1,39 @@
-const mongoose = require("mongoose");
-const validator = require("validator");
-const bcrypt = require("bcryptjs");
+const mongoose = require('mongoose');
+const validator = require('validator');
+const bcrypt = require('bcryptjs');
 
 const UserSchema = new mongoose.Schema(
   {
     fullName: {
       type: String,
-      required: [true, "The name is required"],
+      required: [true, 'The name is required'],
     },
     email: {
       type: String,
-      required: [true, "The email is required"],
+      required: [true, 'The email is required'],
       trim: true,
       validator: (value) => validator.isEmail(value),
       message: (props) => `The email ${props.value} is not valid`,
     },
     password: {
       type: String,
-      required: [true, "The password is required"],
-      minlength: [8, "The password is too short"],
+      required: [true, 'The password is required'],
+      minlength: [8, 'The password is too short'],
     },
     role: {
       type: String,
-      enum: ["admin", "employee", "user"],
-      default: "user",
+      enum: ['admin', 'employee', 'client'],
+      default: 'client',
     },
     profileImage: {
       type: String,
     },
   },
-  { tymestamps: true },
+  { timestamps: true }
 );
 
-UserSchema.pre("save", async function passwordPreSave(next) {
-  if (!this.isModified("password")) {
+UserSchema.pre('save', async function passwordPreSave(next) {
+  if (!this.isModified('password')) {
     return next();
   }
 
@@ -50,5 +50,5 @@ UserSchema.methods.comparePassword = function comparePassword(candidate) {
   return bcrypt.compare(candidate, this.password);
 };
 
-const UserModel = new mongoose.model("users", UserSchema);
+const UserModel = new mongoose.model('users', UserSchema);
 module.exports = UserModel;

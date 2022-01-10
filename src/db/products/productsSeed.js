@@ -1,13 +1,13 @@
-const { seedProducts } = require('./productsSeedData')
-const db = require('../../models')
+const { seedProducts } = require('./productsSeedData');
+const db = require('../../models');
 
 async function populateProducts() {
-  const products = await seedProducts()
+  const products = await seedProducts();
 
-  await db.Product.deleteMany({})
-  await db.Product.create([...products])
+  await db.Product.deleteMany({});
+  await db.Product.create([...products]);
 }
 
 module.exports = {
   populateProducts: populateProducts,
-}
+};
