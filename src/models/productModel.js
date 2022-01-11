@@ -4,9 +4,8 @@ const productSchema = new mongoose.Schema(
   {
     mainImage: {
       data: Buffer,
-      required: true,
+      required: false,
       type: String,
-      minimum: 0,
     },
     gallery: [{
       data: [Buffer],
@@ -22,27 +21,25 @@ const productSchema = new mongoose.Schema(
     description: {
       type: String,
       required: false,
-      minLength: [10, 'The description is too short'],
+      // minLength: [10, 'The description is too short'],
     },
     price: {
       type: Number,
-      minimum: 0,
-      required: true,
-      // get: v => (v/100).toFixed(2),
-      // set: v => v*100
+
+      // minimum: 0,
+      // required: true,
+      set: v => (v),
+      get: v => (v/100).toFixed(2),
+      required: false,
     },
     stock: {
       type: Number,
-      required: true,
+      required: false,
     },
-    //   color: [{
-    //     type: String,
-    //     image: String
-    //   }],
   },
   {
     timestamps: true,
-    toJSON: { getters: true },
+    // toJSON: { getters: true },
   }
 );
 

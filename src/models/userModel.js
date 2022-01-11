@@ -28,6 +28,15 @@ const UserSchema = new mongoose.Schema(
     profileImage: {
       type: String,
     },
+    phoneNumber: { type: String },
+    address: { type: String },
+    zipCode: { type: String },
+    city: { type: String },
+    country: { type: String },
+    products: { type: Array },
+    orderTotal: {
+      type: Number,
+    },
   },
   { timestamps: true }
 );

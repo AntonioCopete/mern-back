@@ -1,5 +1,6 @@
 // const { log } = require('loglevel');
 const db = require('../models');
+const fs = require('fs');
 // const { logger } = require("../config/config");
 
 async function createProduct(req, res, next) {
@@ -143,7 +144,7 @@ async function updateProduct(req, res, next) {
       message: 'At least one main Image is required',
     });
   }
-    else if(mainImage !== null && gallery == null) {
+  else if(mainImage !== null && gallery == null) {
     // Send main image to its field
     const thumbnail = new Date().getTime().toString() + '-' + mainImage.name;
     const path = process.cwd() + '/src/uploads/' + thumbnail;
@@ -203,10 +204,10 @@ async function updateProduct(req, res, next) {
           data.push(
             fileName,
             );
-    } else {
-      res.send({
-        status: false,
-        message: 'Remember to at least provide two images at the gallery',
+  } else {
+    res.send({
+      status: false,
+      message: 'The more images you have the better positioned your product will be',
       });  
     }
     const updatedProduct = await db.Product.findByIdAndUpdate(
@@ -237,6 +238,7 @@ async function updateProduct(req, res, next) {
 async function deleteProduct(req, res, next) {
   try {
     const productId = req.params['productId'];
+    // fs.unlinkSync(process.cwd() + `./src/uploads/${productId}`);
 
     const updateItem = await db.Product.deleteOne(
       { _id: productId },
