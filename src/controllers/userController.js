@@ -21,21 +21,31 @@ async function login(req, res, next) {
 
 async function createUser(req, res, next) {
   console.log(req.body);
-  const { email, password, fullName } = req.body;
-  // const { email, password, fullName, phoneNumber, address, zipCode, city, country, products, orderTotal } = req.body;
+  const {
+    email,
+    password,
+    fullName,
+    phoneNumber,
+    address,
+    zipCode,
+    city,
+    country,
+    products,
+    orderTotal,
+  } = req.body;
 
   try {
     const user = await db.User.create({
       fullName: fullName,
       email: email,
       password: password,
-      // phoneNumber: phoneNumber,
-      // address: address,
-      // zipCode: zipCode,
-      // city: city,
-      // country: country,
-      // products: products,
-      // orderTotal: orderTotal,
+      phoneNumber: phoneNumber,
+      address: address,
+      zipCode: zipCode,
+      city: city,
+      country: country,
+      products: products,
+      orderTotal: orderTotal,
     });
 
     res.status(201).send({
@@ -60,7 +70,7 @@ async function getUsers(req, res, next) {
 
 async function updateUser(req, res, next) {
   const { userId } = req.params;
-  
+
   try {
     const updateUser = await db.User.findByIdAndUpdate(userId, req.body, {
       new: true,
