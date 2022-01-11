@@ -134,87 +134,87 @@ async function updateProduct(req, res, next) {
   try {
   const id = req.params['productId'];
   const editedProduct = req.body;
-  const mainImage = req.files.mainImage;
-  const gallery = req.files.gallery;
-  const data = [];
+  // const mainImage = req.files.mainImage;
+  // const gallery = req.files.gallery;
+  // const data = [];
 
-  if (mainImage == null) {
-    res.send({
-      status: false,
-      message: 'At least one main Image is required',
-    });
-  }
-  else if(mainImage !== null && gallery == null) {
-    // Send main image to its field
-    const thumbnail = new Date().getTime().toString() + '-' + mainImage.name;
-    const path = process.cwd() + '/src/uploads/' + thumbnail;
-    if(mainImage.truncated) {
-      throw new Error('The main Image file is too large');
-    }
-    mainImage.mv(path);
-    editedProduct.mainImage = thumbnail;
+  // if (mainImage == null) {
+  //   res.send({
+  //     status: false,
+  //     message: 'At least one main Image is required',
+  //   });
+  // }
+  // else if(mainImage !== null && gallery == null) {
+  //   // Send main image to its field
+  //   const thumbnail = new Date().getTime().toString() + '-' + mainImage.name;
+  //   const path = process.cwd() + '/src/uploads/' + thumbnail;
+  //   if(mainImage.truncated) {
+  //     throw new Error('The main Image file is too large');
+  //   }
+  //   mainImage.mv(path);
+  //   editedProduct.mainImage = thumbnail;
 
-  } else if(mainImage !== null && gallery.length > 1 ) {
-      // Send main image to its field
-      const thumbnail = new Date().getTime().toString() + '-' + mainImage.name;
-      const path = process.cwd() + '/src/uploads/' + thumbnail;
-      if(mainImage.truncated) {
-        throw new Error('The main Image file is too large');
-      }
-      mainImage.mv(path);
-      editedProduct.mainImage = thumbnail;
+  // } else if(mainImage !== null && gallery.length > 1 ) {
+  //     // Send main image to its field
+  //     const thumbnail = new Date().getTime().toString() + '-' + mainImage.name;
+  //     const path = process.cwd() + '/src/uploads/' + thumbnail;
+  //     if(mainImage.truncated) {
+  //       throw new Error('The main Image file is too large');
+  //     }
+  //     mainImage.mv(path);
+  //     editedProduct.mainImage = thumbnail;
 
-      // For multiple images
-      gallery.forEach((image) => {
-        const fileName = new Date().getTime().toString() + '-' + image.name;
-        const savePath = process.cwd() + '/src/uploads/' + fileName;
-        if(gallery.truncated) {
-          throw new Error('One of the gallery images is too large. Max size is 2MB');
-        }
-        image.mv(savePath, function (err) {
-          if(err) {
-            console.log(err),
-            'There was an error with one of the images'
-        }else{
-          console.log('File uploaded successfully');
-        }
-        });
-        data.push(
-          fileName,
-      )
-    });
+  //     // For multiple images
+  //     gallery.forEach((image) => {
+  //       const fileName = new Date().getTime().toString() + '-' + image.name;
+  //       const savePath = process.cwd() + '/src/uploads/' + fileName;
+  //       if(gallery.truncated) {
+  //         throw new Error('One of the gallery images is too large. Max size is 2MB');
+  //       }
+  //       image.mv(savePath, function (err) {
+  //         if(err) {
+  //           console.log(err),
+  //           'There was an error with one of the images'
+  //       }else{
+  //         console.log('File uploaded successfully');
+  //       }
+  //       });
+  //       data.push(
+  //         fileName,
+  //     )
+  //   });
 
-  } else if(mainImage !== null && gallery !== null) {
-    // Send main image to its field
-      const thumbnail = new Date().getTime().toString() + '-' + mainImage.name;
-      const path = process.cwd() + '/src/uploads/' + thumbnail;
-      if(mainImage.truncated) {
-        throw new Error('The main Image file is too large. Max size is 2MB');
-      }
-      mainImage.mv(path);
-      editedProduct.mainImage = thumbnail;
+  // } else if(mainImage !== null && gallery !== null) {
+  //   // Send main image to its field
+  //     const thumbnail = new Date().getTime().toString() + '-' + mainImage.name;
+  //     const path = process.cwd() + '/src/uploads/' + thumbnail;
+  //     if(mainImage.truncated) {
+  //       throw new Error('The main Image file is too large. Max size is 2MB');
+  //     }
+  //     mainImage.mv(path);
+  //     editedProduct.mainImage = thumbnail;
 
-        // For a single image
-        const fileName = new Date().getTime().toString() + '-' + gallery.name;
-        const galleryPath = process.cwd() + '/src/uploads/' + fileName;
-        if(gallery.truncated) {
-          throw new Error('One of the gallery images is too large. Max size is 2MB');
-        }
-          gallery.mv(galleryPath);
-          data.push(
-            fileName,
-            );
-  } else {
-    res.send({
-      status: false,
-      message: 'The more images you have the better positioned your product will be',
-      });  
-    }
+  //       // For a single image
+  //       const fileName = new Date().getTime().toString() + '-' + gallery.name;
+  //       const galleryPath = process.cwd() + '/src/uploads/' + fileName;
+  //       if(gallery.truncated) {
+  //         throw new Error('One of the gallery images is too large. Max size is 2MB');
+  //       }
+  //         gallery.mv(galleryPath);
+  //         data.push(
+  //           fileName,
+  //           );
+  // } else {
+  //   res.send({
+  //     status: false,
+  //     message: 'The more images you have the better positioned your product will be',
+  //     });  
+  //   }
     const updatedProduct = await db.Product.findByIdAndUpdate(
       id,
       {
-        mainImage: editedProduct.mainImage,
-        gallery: data,
+        // mainImage: editedProduct.mainImage,
+        // gallery: data,
         title: editedProduct.title,
         description: editedProduct.description,
         price: editedProduct.price,
