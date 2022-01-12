@@ -30,6 +30,6 @@ app.use(
 
 app.use('/users', UsersRouter);
 app.use('/products', ProductsRouter);
-app.use('/checkout', OrderRouter);
+app.use('/orders', OrderRouter);
 
 module.exports = app;

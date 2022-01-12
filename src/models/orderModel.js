@@ -5,23 +5,23 @@ const orderSchema = new mongoose.Schema(
   userLink: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',
-    required: true,
+    required: false,
   },
   phoneNumber: {
-    type: String,
-    required: true,
+    type: Number,
+    required: false,
   },
   address: {
     type: String,
-    required: true,
+    required: false,
   },
   country: {
     type: String,
-    required: true,
+    required: false,
   },
   postCode: {
     type: String,
-    required: true,
+    required: false,
   },
   state: {
     type: String,
@@ -33,30 +33,30 @@ const orderSchema = new mongoose.Schema(
   },
   card: {
     type: String,
-    required: true,
+    required: false,
   },
   cardNumber: {
     type: String,
-    required: true,
+    required: false,
   },
   products: [{
     title: {
       type: String,
       ref: 'title',
-      required: true,
+      required: false,
     },
     quantity: {
       type: Number,
-      required: true,
+      required: false,
     },
     price: {
       type: Number,
-      required: true,
+      required: false,
     },
     id: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'Product',
-      required: true,
+      required: false,
     }
   }],
   status: {
@@ -79,7 +79,7 @@ const orderSchema = new mongoose.Schema(
   },
   shipping: {
     type: String,
-    enum: ['delivered', 'peding', 'canceled'],
+    enum: ['delivered', 'pending', 'canceled'],
     default: 'pending',
   },
  });

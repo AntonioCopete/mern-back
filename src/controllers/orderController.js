@@ -3,30 +3,37 @@ const db = require("../models");
 // POST order
 async function addOrder(req, res) {
   try {
-    const { products } = req.body;
-    console.log(products);
-    const order = await db.Order.create(req.body);
-    console.log(order);
+    const orderProduct = req.body;
+    console.log(orderProduct);
+    const newOrder = await db.Order.create({
+      address: orderProduct.address,        
+      });
+      res.status(200).send({
+        message: 'Product successfully created',
+        data: newOrder,
+      });
+      res.status(200).send({
+        message: { message: "Successfully added", id: newOrder._id },
+        data: newOrder,
+      });
+    } catch (error) {
+      res.status(500).send({ error: error.message });
+    }
 
-    products.forEach(async (product) => {
-      const { _id } = product;
-      const { quantity } = product;
-      const updatedProduct = await db.Product.findByIdAndUpdate(
-        _id,
-        {
-          $inc: { stock: -quantity },
-        },
-        {
-          new: true,
-        }
-      );
-      console.log(updatedProduct);
-    });
-
-    res.status(200).send({ message: "Successfully added", id: order._id });
-  } catch (error) {
-    res.status(500).send({ error: error.message });
-  }
+    // products.forEach(async (product) => {
+    //   const { _id } = product;
+    //   const { quantity } = product;
+    //   const updatedProduct = await db.Product.findByIdAndUpdate(
+    //     _id,
+    //     {
+    //       $inc: { stock: -quantity },
+    //     },
+    //     {
+    //       new: true,
+    //     }
+    //   );
+    //   console.log(updatedProduct);
+    // });
 }
 
 module.exports = {
