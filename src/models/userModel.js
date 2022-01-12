@@ -28,15 +28,11 @@ const UserSchema = new mongoose.Schema(
     profileImage: {
       type: String,
     },
-    phoneNumber: { type: String },
-    address: { type: String },
-    zipCode: { type: String },
-    city: { type: String },
-    country: { type: String },
-    products: { type: Array },
-    orderTotal: {
-      type: Number,
-    },
+    userLink: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'User',
+      required: true,
+  },
   },
   { timestamps: true }
 );

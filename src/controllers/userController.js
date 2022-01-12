@@ -25,13 +25,7 @@ async function createUser(req, res, next) {
     email,
     password,
     fullName,
-    phoneNumber,
-    address,
-    zipCode,
-    city,
-    country,
-    products,
-    orderTotal,
+    userLink,
   } = req.body;
 
   try {
@@ -39,13 +33,7 @@ async function createUser(req, res, next) {
       fullName: fullName,
       email: email,
       password: password,
-      phoneNumber: phoneNumber,
-      address: address,
-      zipCode: zipCode,
-      city: city,
-      country: country,
-      products: products,
-      orderTotal: orderTotal,
+      userLink: userLink,
     });
 
     res.status(201).send({
