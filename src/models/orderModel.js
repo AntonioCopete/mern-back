@@ -15,26 +15,41 @@ const orderSchema = new mongoose.Schema(
     type: String,
     required: true,
   },
-  zipCode: {
-    type: String,
-    required: true,
-  },
-  city: {
-    type: String,
-    required: false,
-  },
   country: {
     type: String,
     required: true,
   },
+  postCode: {
+    type: String,
+    required: true,
+  },
+  state: {
+    type: String,
+    required: false,
+  },
+  town: {
+    type: String,
+    required: false,
+  },
   products: [{
-    type: [String],
-    ref: 'Product',
-    required: false,
-  }],
-  quantity: [{
-    type: [Number],
-    required: false,
+    title: {
+      type: String,
+      ref: 'title',
+      required: true,
+    },
+    quantity: {
+      type: Number,
+      required: true,
+    },
+    price: {
+      type: Number,
+      required: true,
+    },
+    id: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Product',
+      required: true,
+    }
   }],
   status: {
     type: String,
