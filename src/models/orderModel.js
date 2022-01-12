@@ -1,7 +1,6 @@
 const mongoose = require('mongoose');
 
-const orderSchema = new mongoose.Schema(
-  {
+const orderSchema = new mongoose.Schema({
   userLink: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',
@@ -13,52 +12,54 @@ const orderSchema = new mongoose.Schema(
   },
   address: {
     type: String,
-    required: false,
+    required: true,
   },
   country: {
     type: String,
-    required: false,
+    required: true,
   },
   postCode: {
     type: String,
-    required: false,
+    required: true,
   },
   state: {
     type: String,
-    required: false,
+    required: true,
   },
   town: {
     type: String,
-    required: false,
+    required: true,
   },
   card: {
     type: String,
-    required: false,
+    required: true,
   },
   cardNumber: {
     type: String,
-    required: false,
+    required: true,
   },
-  products: [{
-    title: {
-      type: String,
-      ref: 'title',
-      required: false,
+  products: [
+    {
+      title: {
+        type: String,
+        ref: 'title',
+        required: true,
+      },
+      quantity: {
+        type: Number,
+        required: false,
+      },
+      price: {
+        type: Number,
+        required: true,
+      },
+      id: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Product',
+        required: false,
+      },
     },
-    quantity: {
-      type: Number,
-      required: false,
-    },
-    price: {
-      type: Number,
-      required: false,
-    },
-    id: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'Product',
-      required: false,
-    }
-  }],
+  ],
   status: {
     type: String,
     enum: ['pending', 'paid', 'canceled'],
@@ -82,7 +83,7 @@ const orderSchema = new mongoose.Schema(
     enum: ['delivered', 'pending', 'canceled'],
     default: 'pending',
   },
- });
+});
 
 const orderModel = new mongoose.model('order', orderSchema);
 

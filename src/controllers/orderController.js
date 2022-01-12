@@ -1,41 +1,32 @@
-const db = require("../models");
+const db = require('../models');
 
 // POST order
 async function addOrder(req, res) {
   try {
-    const orderProduct = req.body;
-    console.log(orderProduct);
-    const newOrder = await db.Order.create({
-      address: orderProduct.address,        
-      });
-      res.status(200).send({
-        message: 'Product successfully created',
-        data: newOrder,
-      });
-      res.status(200).send({
-        message: { message: "Successfully added", id: newOrder._id },
-        data: newOrder,
-      });
-    } catch (error) {
-      res.status(500).send({ error: error.message });
-    }
+    const { address, country, postCode, state, town } = req.body.userAddress;
+    const { cardNumber, cvc, card } = req.body.userPayment;
+    const { products } = req.body.cart;
 
-    // products.forEach(async (product) => {
-    //   const { _id } = product;
-    //   const { quantity } = product;
-    //   const updatedProduct = await db.Product.findByIdAndUpdate(
-    //     _id,
-    //     {
-    //       $inc: { stock: -quantity },
-    //     },
-    //     {
-    //       new: true,
-    //     }
-    //   );
-    //   console.log(updatedProduct);
-    // });
+    const newOrder = await db.Order.create({
+      address,
+      country,
+      postCode,
+      state,
+      town,
+      cardNumber,
+      cvc,
+      card,
+      products,
+    });
+    res.status(201).send({
+      message: 'Product successfully created',
+      data: newOrder,
+    });
+  } catch (error) {
+    res.status(500).send({ error: error.message });
+  }
 }
 
 module.exports = {
-    addOrder: addOrder,
+  addOrder: addOrder,
 };
