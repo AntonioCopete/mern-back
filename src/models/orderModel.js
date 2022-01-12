@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 
 const orderSchema = new mongoose.Schema(
   {
-  user: {
+  userLink: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',
     required: true,

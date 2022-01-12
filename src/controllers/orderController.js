@@ -4,7 +4,7 @@ const db = require("../models");
 async function addOrder(req, res) {
   try {
     const { products } = req.body;
-    console.log(user);
+    console.log(products);
     const order = await db.Order.create(req.body);
     console.log(order);
 
