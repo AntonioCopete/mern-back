@@ -3,7 +3,7 @@ const mongoose = require('mongoose');
 const productSchema = new mongoose.Schema(
   {
     mainImage: {
-      data: Buffer,
+      data: { Buffer },
       required: false,
       type: String,
     },
