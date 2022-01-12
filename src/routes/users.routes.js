@@ -1,5 +1,6 @@
 const Router = require('express').Router;
 const { authMiddleware } = require('../middleware/authMiddleware');
+const{theAdminMiddleware} = require('../middleware/theAdminMiddleware');
 
 const { userController } = require('../controllers');
 
@@ -10,7 +11,7 @@ UserRouter.post('/signup', authMiddleware, userController.createUser);
 UserRouter.get('/', userController.getUsers);
 UserRouter.get('/:userId', userController.getSingleUser);
 UserRouter.post('/', userController.createUser);
-UserRouter.patch('/:userId', userController.updateUser);
-UserRouter.delete('/:userId', userController.deleteUser);
+UserRouter.patch('/:userId', theAdminMiddleware, userController.updateUser);
+UserRouter.delete('/:userId', theAdminMiddleware, userController.deleteUser);
 
 module.exports = UserRouter;
