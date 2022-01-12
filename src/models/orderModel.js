@@ -31,6 +31,14 @@ const orderSchema = new mongoose.Schema(
     type: String,
     required: false,
   },
+  card: {
+    type: String,
+    required: true,
+  },
+  cardNumber: {
+    type: String,
+    required: true,
+  },
   products: [{
     title: {
       type: String,
